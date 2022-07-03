@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/firecommit_icon.png",
     "splash": {
-      "image": "./assets/firecommit_splash.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
