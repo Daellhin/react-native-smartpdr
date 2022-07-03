@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Dimensions, View } from 'react-native';
+import { Dimensions, View, Text } from 'react-native';
 import { Accelerometer, Magnetometer, Gyroscope } from 'expo-sensors';
 import Canvas, { CanvasRenderingContext2D, Image } from 'react-native-canvas';
 import { Asset } from 'expo-asset';
-
+import Map from "../assets/drawing.svg";
 
 // custom modules
 import { range } from './utils/sensors_utils';
 import { useHeading, useStepLength } from './utils/customHooks';
+import Svg, { Circle, Defs, LinearGradient, Path, Rect, Stop } from 'react-native-svg';
 
-export function LocationScreen({ navigation }) {
+export function LocationScreen2({ navigation }) {
 	// Listeners
 	const [acc, setAcc] = useState({ x: 0, y: 0, z: 0 });
 	const [mag, setMag] = useState({ x: 0, y: 0, z: 0 });
@@ -53,12 +54,6 @@ export function LocationScreen({ navigation }) {
 		Gyroscope.addListener((data) => {
 			setGyr(data);
 		});
-		handleCanvas(canvasRef.current);
-		return () => {
-			Accelerometer.removeAllListeners();
-			Magnetometer.removeAllListeners();
-			Gyroscope.removeAllListeners();
-		};
 	}, [navigation]);
 
 	useEffect(() => {
@@ -66,76 +61,61 @@ export function LocationScreen({ navigation }) {
 			setLineWidth((lw) => ({ ...lw, sum: -lw.sum }));
 		}
 		setLineWidth((lw) => ({ ...lw, val: lw.val + lw.sum }));
-		handleCanvas(canvasRef.current);
 	}, [heading]);
 
 	useEffect(() => {
 		let nx = stepLength ? stepLength * Math.sin(headingStep) * 10 : 0;
 		let ny = stepLength ? stepLength * Math.cos(headingStep) * 10 : 0;
 		setLocation((previous) => ({ x: previous.x + nx, y: previous.y - ny }));
-		handleCanvas(canvasRef.current);
 	}, [stepLength]);
 
-	const handleCanvas = (canvas: Canvas) => {
-		canvas.width = windowWidth;
-		canvas.height = windowHeight;
-		const ctx = canvas.getContext('2d');
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		if (image)
-			ctx.drawImage(image, 0, 0);
-		currentUser(ctx, location.x, location.y);
-	};
+	function describeArc(x, y, radius, startAngle, endAngle) {
+		var start = polarToCartesian(x, y, radius, endAngle);
+		var end = polarToCartesian(x, y, radius, startAngle);
 
-	const currentUser = (ctx: CanvasRenderingContext2D, x: number, y: number) => {
-		// user around field
-		ctx.beginPath();
-		ctx.fillStyle = 'rgba(252, 129, 50, 0.1)';
-		ctx.strokeStyle = 'fc8132';
-		ctx.lineWidth = 0.3;
-		ctx.arc(x, y, 40, 0, 2 * Math.PI, false);
-		ctx.fill();
-		ctx.stroke();
-		ctx.closePath();
-		
-		// user heading direction
-		ctx.beginPath();
-		ctx.fillStyle = 'rgba(252, 129, 50, 0.3)';
-		ctx.arc(
-			x,
-			y,
-			55,
-			range(heading - Math.PI / 2 - (20 * Math.PI) / 180, '2PI'),
-			range(heading - Math.PI / 2 + (20 * Math.PI) / 180, '2PI'),
-			false
-		);
-		ctx.lineTo(x, y);
-		ctx.fill();
-		ctx.closePath();
-		// shadow #1
-		ctx.shadowColor = 'gray';
-		ctx.shadowOffsetX = 0;
-		ctx.shadowOffsetY = 0;
-		ctx.shadowBlur = 10;
-		// user circle
-		ctx.beginPath();
-		ctx.fillStyle = 'fc8132';
-		ctx.strokeStyle = 'white';
-		ctx.lineWidth = lineWidth.val;
-		ctx.arc(x, y, 10, 0, 2 * Math.PI, false);
-		ctx.fill();
-		// shadow #2
-		ctx.shadowColor = 'gray';
-		ctx.shadowOffsetX = 0;
-		ctx.shadowOffsetY = 0;
-		ctx.shadowBlur = 0;
-		// user circle stroke
-		ctx.stroke();
-		ctx.closePath();
-	};
+		var largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+
+		var d = [
+			"M", start.x, start.y,
+			"A", radius, radius, 0, largeArcFlag, 0, end.x, end.y
+		].join(" ");
+
+		return d;
+	}
+
+	function polarToCartesian(centerX, centerY, radius, angleInRadians) {
+		return {
+			x: centerX + (radius * Math.cos(angleInRadians)),
+			y: centerY + (radius * Math.sin(angleInRadians))
+		}
+	}
+
+	const arcAngle = 80;
+	const d = describeArc(location.x, location.y, 30,
+		range(heading - Math.PI / 2 - ((arcAngle / 2) * Math.PI) / 180, '2PI'),
+		range(heading - Math.PI / 2 + ((arcAngle / 2) * Math.PI) / 180, '2PI')
+	);
 
 	return (
-		<View style={{ flex: 1, backgroundColor: '#B9B9B9' }}>
-			<Canvas ref={canvasRef} />
+		<View>
+			<Text>{range(heading - Math.PI / 2 - (20 * Math.PI) / 180, '2PI')}</Text>
+			<Svg viewBox={`0 0 ${windowWidth} ${windowHeight}`} style={{ backgroundColor: "lightgray" }}>
+				<Circle
+					cx={location.x} cy={location.y} r={30}
+					strokeWidth={lineWidth.val}
+					fill={"rgba(252, 129, 50, 0.1)"}
+				/>
+				<Circle
+					cx={location.x} cy={location.y} r={10}
+					stroke={"white"} strokeWidth={lineWidth.val}
+					fill={"rgba(252, 129, 50, 0.25)"}
+				/>
+				<Path
+					stroke="white" strokeWidth={6}
+					d={d}
+				/>
+				<Map />
+			</Svg>
 		</View>
 	);
 }

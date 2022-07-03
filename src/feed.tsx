@@ -12,7 +12,11 @@ export function FeedScreen({ navigation }) {
     },
     StepLength: { title: 'Step Length Estimation', icon: 'run' },
     Location: {
-      title: 'Location Estimation',
+      title: 'Location Estimation V1',
+      icon: 'map-marker-radius-outline',
+    },
+    Location2: {
+      title: 'Location Estimation V2',
       icon: 'map-marker-radius-outline',
     },
   };

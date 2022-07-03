@@ -10,6 +10,7 @@ import { StepEventScreen } from './stepEvent';
 import { HeadingDirectionScreen } from './headingDirection';
 import { StepLengthScreen } from './stepLength';
 import { LocationScreen } from './location';
+import { LocationScreen2 } from './locationV2';
 
 function Header({ scene, previous, navigation }) {
   const { options } = scene.descriptor;
@@ -87,6 +88,10 @@ const StackScreen = {
   },
   Location: {
     component: LocationScreen,
+    options: { headerTitle: 'Location Estimation' },
+  },
+  Location2: {
+    component: LocationScreen2,
     options: { headerTitle: 'Location Estimation' },
   },
 };
