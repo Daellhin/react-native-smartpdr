@@ -1,6 +1,6 @@
 export function object_sign_inversion(obj) {
   return Object.assign(
-    ...Object.entries(obj).map(([key, val]) => ({ [key]: -val }))
+    {}, ...Object.entries(obj).map(([key, val]) => ({ [key]: -val }))
   );
 }
 

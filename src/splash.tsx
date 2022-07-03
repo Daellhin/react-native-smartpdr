@@ -12,18 +12,13 @@ SplashScreen.preventAutoHideAsync().catch(() => {
 export function AnimatedAppLoader({ children, image }) {
   const [isSplashReady, setSplashReady] = useState(false);
 
-  const startAsync = useMemo(
-    () => () => Asset.fromURI(image).downloadAsync(),
-    [image]
-  );
-  const onFinish = useMemo(() => setSplashReady(true), []);
   if (!isSplashReady) {
     return (
       <AppLoading
         autoHideSplash={false}
-        startAsync={startAsync}
+        startAsync={Asset.fromURI(image).downloadAsync as any}
         onError={console.error}
-        onFinish={onFinish}
+        onFinish={() => setSplashReady(true)}
       />
     );
   }
@@ -55,7 +50,7 @@ function AnimatedSplashScreen({ children, image }) {
     } finally {
       setAppReady(true);
     }
-  });
+  }, []);
 
   return (
     <View style={{ flex: 1 }}>
