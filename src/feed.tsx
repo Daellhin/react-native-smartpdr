@@ -4,19 +4,27 @@ import { List, Surface } from 'react-native-paper';
 
 export function FeedScreen({ navigation }) {
   const ListItem = {
+    Location2: {
+      title: 'Location Estimation V2',
+      icon: 'map-marker-radius-outline',
+    },
+    Graph: {
+      title: 'Graph testing',
+      icon: 'walk',
+    },
     Attitude: { title: 'Attitude Estimation', icon: 'screen-rotation' },
     StepEvent: { title: 'Step Event Detection', icon: 'walk' },
     HeadingDirection: {
       title: 'Heading Direction Estimation',
       icon: 'compass-outline',
     },
+    Compass: {
+      title: 'Compass',
+      icon: 'compass-outline',
+    },
     StepLength: { title: 'Step Length Estimation', icon: 'run' },
     Location: {
       title: 'Location Estimation V1',
-      icon: 'map-marker-radius-outline',
-    },
-    Location2: {
-      title: 'Location Estimation V2',
       icon: 'map-marker-radius-outline',
     },
   };

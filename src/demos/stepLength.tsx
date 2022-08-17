@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text } from 'react-native';
-import { Accelerometer, Gyroscope, Magnetometer } from 'expo-sensors';
+import { Accelerometer, Magnetometer, Gyroscope } from 'expo-sensors';
+import { Text, View } from 'react-native';
 import { Button } from 'react-native-paper';
 
 // custom modules
-import { round } from './utils/sensors_utils';
-import { styles } from './utils/styles';
-import { RealTimeLineChart } from './lineChart';
-import { useAccStep } from './utils/customHooks';
+import { styles } from '../utils/styles';
+import { useAccStep, useStepLength } from '../utils/customHooks';
+import { round } from '../utils/sensors_utils';
 
-export function StepEventScreen({ navigation }) {
+export function StepLengthScreen({ navigation }) {
   // Listeners
   const [subscription, setSubscription] = useState(null);
   const [acc, setAcc] = useState({ x: 0, y: 0, z: 0 });
@@ -18,6 +17,7 @@ export function StepEventScreen({ navigation }) {
 
   // Custom Hooks
   const [accStep, accEvent] = useAccStep(acc, mag, gyr);
+  const [stepLength, headingStep] = useStepLength(acc, mag, gyr);
 
   // States
   const [stepCount, setStepCount] = useState(0);
@@ -69,12 +69,15 @@ export function StepEventScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <RealTimeLineChart title="step acceleration" data={round(accStep)} />
-      <Text style={styles.title}>Step Acceleration</Text>
-      <Text style={styles.text}>{accEvent}</Text>
-      <Text style={styles.title}>Step Count</Text>
-      <Text style={styles.text}>{stepCount}</Text>
-      <View style={styles.buttonContainer}>
+      <View style={styles.container}>
+        <Text style={styles.title}>step count</Text>
+        <Text style={styles.text}>{stepCount}</Text>
+        <Text style={styles.title}>
+          heading direction at the k_th step event
+        </Text>
+        <Text style={styles.text}>{round((headingStep * 180) / Math.PI)}</Text>
+        <Text style={styles.title}>estimated step length</Text>
+        <Text style={styles.text}>{stepLength}</Text>
         <Button
           style={styles.button}
           dark={true}

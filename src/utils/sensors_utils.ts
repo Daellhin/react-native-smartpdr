@@ -11,7 +11,7 @@ export function round(n) {
   return Math.floor(n * 100) / 100;
 }
 
-export function range(deg, mode) {
+export function range(deg: number, mode: '2PI' | 'PI') {
   switch (mode) {
     case '2PI': {
       deg %= 2 * Math.PI;

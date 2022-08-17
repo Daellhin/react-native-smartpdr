@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { View, Text } from 'react-native';
 import { Accelerometer, Magnetometer, Gyroscope } from 'expo-sensors';
 import { Button } from 'react-native-paper';
+import { styles } from '../utils/styles';
+import { round } from '../utils/sensors_utils';
+import { useHeading } from '../utils/customHooks';
 
-// custom modules
-import { styles } from './utils/styles';
-import { round } from './utils/sensors_utils';
-import { useHeading } from './utils/customHooks';
+const updateInterval = 50;
 
 export function HeadingDirectionScreen({ navigation }) {
   // Listeners
@@ -19,12 +19,12 @@ export function HeadingDirectionScreen({ navigation }) {
   const heading = useHeading(acc, mag, gyr);
 
   // Constant declarations
-  const dt = 100;
+
   const data = round((heading * 180) / Math.PI);
 
-  Accelerometer.setUpdateInterval(dt);
-  Magnetometer.setUpdateInterval(dt);
-  Gyroscope.setUpdateInterval(dt);
+  Accelerometer.setUpdateInterval(updateInterval);
+  Magnetometer.setUpdateInterval(updateInterval);
+  Gyroscope.setUpdateInterval(updateInterval);
 
   const _subscribe = () => {
     const sensor = {

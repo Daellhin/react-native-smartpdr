@@ -7,6 +7,7 @@ import {
   range,
   object_sign_inversion,
 } from './sensors_utils';
+import { mod } from './utils';
 
 export function useGyrAngle(gyr) {
   const ref = useRef({ pitch: 0, roll: 0, yaw: 0 });
@@ -304,6 +305,25 @@ export function useHeading(acc, mag, gyr) {
   }, [headingMag, headingGyr]);
 
   return heading;
+}
+
+/**
+ * Returns ciompas heading as rads
+ */
+export function useCompassHeading(mag: { x: number; y: number; z: number; }) {
+  let angle = 0;
+  if (mag) {
+    let { x, y, z } = mag;
+    if (Math.atan2(y, x) >= 0) {
+      angle = Math.atan2(y, x);
+    } else {
+      angle = Math.atan2(y, x) + 2 * Math.PI;
+    }
+
+    // must be offset by -90°, for unknown reasons
+    angle = mod(angle - (Math.PI / 2), 2 * Math.PI);
+  }
+  return angle;
 }
 
 export function useStepLength(acc, mag, gyr) {

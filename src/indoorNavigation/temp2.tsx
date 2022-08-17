@@ -1,14 +1,11 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Dimensions, View, Text } from 'react-native';
-import { Accelerometer, Magnetometer, Gyroscope } from 'expo-sensors';
-import Canvas, { CanvasRenderingContext2D, Image } from 'react-native-canvas';
 import { Asset } from 'expo-asset';
-import Map from "../assets/drawing.svg";
-
-// custom modules
-import { range } from './utils/sensors_utils';
-import { useHeading, useStepLength } from './utils/customHooks';
-import Svg, { Circle, Defs, LinearGradient, Path, Rect, Stop } from 'react-native-svg';
+import { Accelerometer, Gyroscope, Magnetometer } from 'expo-sensors';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Dimensions, Text, View } from 'react-native';
+import Svg, { Circle, Path } from 'react-native-svg';
+import Map from "../../assets/drawing.svg";
+import { useHeading, useStepLength } from '../utils/customHooks';
+import { range } from '../utils/sensors_utils';
 
 export function LocationScreen2({ navigation }) {
 	// Listeners
@@ -21,7 +18,7 @@ export function LocationScreen2({ navigation }) {
 
 	const image = useMemo(() => {
 		if (canvasRef.current) {
-			const map = Asset.fromModule(require('../assets/firecommit_icon.png'))
+			const map = Asset.fromModule(require('../../assets/firecommit_icon.png'))
 			const image = new Image(canvasRef.current);
 			image.src = map.uri;
 			return image;
@@ -29,6 +26,7 @@ export function LocationScreen2({ navigation }) {
 	}, [canvasRef.current]);
 
 	// Custom Hooks
+	//const [heading, setHeading] = useState(0); // debug heading indicator
 	const heading = useHeading(acc, mag, gyr);
 	const [stepLength, headingStep] = useStepLength(acc, mag, gyr);
 
@@ -54,6 +52,8 @@ export function LocationScreen2({ navigation }) {
 		Gyroscope.addListener((data) => {
 			setGyr(data);
 		});
+
+		//setInterval(() => setHeading(e => e + 0.2), 1)
 	}, [navigation]);
 
 	useEffect(() => {
@@ -95,10 +95,11 @@ export function LocationScreen2({ navigation }) {
 		range(heading - Math.PI / 2 - ((arcAngle / 2) * Math.PI) / 180, '2PI'),
 		range(heading - Math.PI / 2 + ((arcAngle / 2) * Math.PI) / 180, '2PI')
 	);
-
+	
 	return (
 		<View>
 			<Text>{range(heading - Math.PI / 2 - (20 * Math.PI) / 180, '2PI')}</Text>
+			<Text>{location.x}</Text>
 			<Svg viewBox={`0 0 ${windowWidth} ${windowHeight}`} style={{ backgroundColor: "lightgray" }}>
 				<Circle
 					cx={location.x} cy={location.y} r={30}

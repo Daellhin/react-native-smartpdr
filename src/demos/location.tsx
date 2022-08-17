@@ -6,8 +6,8 @@ import { Asset } from 'expo-asset';
 
 
 // custom modules
-import { range } from './utils/sensors_utils';
-import { useHeading, useStepLength } from './utils/customHooks';
+import { range } from '../utils/sensors_utils';
+import { useHeading, useStepLength } from '../utils/customHooks';
 
 export function LocationScreen({ navigation }) {
 	// Listeners
@@ -20,7 +20,7 @@ export function LocationScreen({ navigation }) {
 
 	const image = useMemo(() => {
 		if (canvasRef.current) {
-			const map = Asset.fromModule(require('../assets/firecommit_icon.png'))
+			const map = Asset.fromModule(require('../../assets/firecommit_icon.png'))
 			const image = new Image(canvasRef.current);
 			image.src = map.uri;
 			return image;

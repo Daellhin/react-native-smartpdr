@@ -1,16 +1,17 @@
-import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Appbar, useTheme } from 'react-native-paper';
+import React from 'react';
 import { Image } from 'react-native';
-
+import { Appbar, useTheme } from 'react-native-paper';
+import { AttitudeScreen } from './demos/attitude';
+import { CompassScreen } from './demos/compass';
 import { FeedScreen } from './feed';
-import { AttitudeScreen } from './attitude';
-import { StepEventScreen } from './stepEvent';
-import { HeadingDirectionScreen } from './headingDirection';
-import { StepLengthScreen } from './stepLength';
-import { LocationScreen } from './location';
-import { LocationScreen2 } from './locationV2';
+import { HeadingDirectionScreen } from './demos/headingDirection';
+import { LocationScreen } from './demos/location';
+import { LocationScreen2 } from './indoorNavigation/locationV2';
+import { StepEventScreen } from './demos/stepEvent';
+import { StepLengthScreen } from './demos/stepLength';
+import { GraphScreen } from './indoorNavigation/graphs/graph-testing';
 
 function Header({ scene, previous, navigation }) {
   const { options } = scene.descriptor;
@@ -82,6 +83,10 @@ const StackScreen = {
     component: HeadingDirectionScreen,
     options: { headerTitle: 'Heading Direction Estimation' },
   },
+  Compass: {
+    component: CompassScreen,
+    options: { headerTitle: 'Compass' },
+  },
   StepLength: {
     component: StepLengthScreen,
     options: { headerTitle: 'Step Length Estimation' },
@@ -93,5 +98,9 @@ const StackScreen = {
   Location2: {
     component: LocationScreen2,
     options: { headerTitle: 'Location Estimation' },
+  },
+  Graph: {
+    component: GraphScreen,
+    options: { headerTitle: 'Graphs' },
   },
 };

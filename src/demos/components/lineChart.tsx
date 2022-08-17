@@ -4,7 +4,7 @@ import { WebView } from 'react-native-webview';
 import { Asset } from 'expo-asset';
 import { ActivityIndicator, useTheme } from 'react-native-paper';
 
-const html = require('../assets/html/index.html');
+const html = require('../../../assets/html/index.html');
 
 const download = async () => {
   let file = Asset.fromModule(html);

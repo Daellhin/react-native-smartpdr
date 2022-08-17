@@ -3,9 +3,9 @@ import { View, Text, Image } from 'react-native';
 import { Accelerometer, Gyroscope, Magnetometer } from 'expo-sensors';
 import { Button } from 'react-native-paper';
 
-import { useAttitude } from './utils/customHooks';
-import { styles } from './utils/styles';
-import { round } from './utils/sensors_utils';
+import { useAttitude } from '../utils/customHooks';
+import { styles } from '../utils/styles';
+import { round } from '../utils/sensors_utils';
 
 export function AttitudeScreen({ navigation }) {
   // Listeners
@@ -64,7 +64,7 @@ export function AttitudeScreen({ navigation }) {
     <View style={styles.container}>
       <View>
         <Image
-          source={require('../assets/deviceAttitude.png')}
+          source={require('../../assets/deviceAttitude.png')}
           style={{ width: 280, height: 300 }}
         />
       </View>
